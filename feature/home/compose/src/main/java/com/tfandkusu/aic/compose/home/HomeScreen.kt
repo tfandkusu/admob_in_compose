@@ -3,7 +3,9 @@ package com.tfandkusu.aic.compose.home
 import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
@@ -41,7 +43,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel) {
+fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
     val context = LocalContext.current
     val (state, _, dispatch) = use(viewModel)
     LaunchedEffect(Unit) {
@@ -69,26 +71,44 @@ fun HomeScreen(viewModel: HomeViewModel) {
             )
         }
     ) {
-        if (errorState.noError()) {
-            if (state.progress) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            } else {
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(state.items, key = { item -> item.repo.id }) {
-                        GitHubRepoListItem(it) { id, on ->
-                            dispatch(HomeEvent.Favorite(id, on))
+        Column(modifier = Modifier.fillMaxSize()) {
+            if (errorState.noError()) {
+                if (state.progress) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        items(state.items, key = { item -> item.repo.id }) {
+                            GitHubRepoListItem(it) { id, on ->
+                                dispatch(HomeEvent.Favorite(id, on))
+                            }
                         }
                     }
                 }
+            } else {
+                ApiError(
+                    errorState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    viewModel.event(HomeEvent.Load)
+                }
             }
-        } else {
-            ApiError(errorState) {
-                viewModel.event(HomeEvent.Load)
+            if (isPreview) {
+                DummyAdMobBanner()
+            } else {
+                BottomAdMobBannerAndroidView()
             }
         }
     }
@@ -114,7 +134,7 @@ class HomeViewModelPreview(private val previewState: HomeState) : HomeViewModel 
 @Preview
 fun HomeScreenPreviewProgress() {
     MyAppTheme {
-        HomeScreen(HomeViewModelPreview(HomeState()))
+        HomeScreen(HomeViewModelPreview(HomeState()), isPreview = true)
     }
 }
 
@@ -129,7 +149,7 @@ fun HomeScreenPreviewList() {
         }
     )
     MyAppTheme {
-        HomeScreen(HomeViewModelPreview(state))
+        HomeScreen(HomeViewModelPreview(state), isPreview = true)
     }
 }
 
@@ -137,7 +157,7 @@ fun HomeScreenPreviewList() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun HomeScreenPreviewDarkProgress() {
     MyAppTheme {
-        HomeScreen(HomeViewModelPreview(HomeState()))
+        HomeScreen(HomeViewModelPreview(HomeState()), isPreview = true)
     }
 }
 
@@ -152,6 +172,6 @@ fun HomeScreenPreviewDarkList() {
         }
     )
     MyAppTheme {
-        HomeScreen(HomeViewModelPreview(state))
+        HomeScreen(HomeViewModelPreview(state), isPreview = true)
     }
 }

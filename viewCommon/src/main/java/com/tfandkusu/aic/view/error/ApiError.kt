@@ -3,8 +3,6 @@ package com.tfandkusu.aic.view.error
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
@@ -24,7 +22,7 @@ import com.tfandkusu.aic.viewmodel.error.ApiErrorState
 import com.tfandkusu.aic.viewmodel.error.ApiServerError
 
 @Composable
-fun ApiError(apiErrorState: ApiErrorState, reload: () -> Unit) {
+fun ApiError(apiErrorState: ApiErrorState, modifier: Modifier = Modifier, reload: () -> Unit) {
     val errorMessage = if (apiErrorState.network) {
         stringResource(R.string.error_network)
     } else if (apiErrorState.server != null) {
@@ -39,7 +37,9 @@ fun ApiError(apiErrorState: ApiErrorState, reload: () -> Unit) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(16.dp).fillMaxWidth().fillMaxHeight()
+        modifier = Modifier
+            .padding(16.dp)
+            .then(modifier)
     ) {
         Text(
             errorMessage,
