@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fork">Fork</string>
+    <string name="action_information">Information</string>
+    <string name="favorite_on">Favorite on</string>
+    <string name="favorite_off">Favorite off</string>
+</resources>

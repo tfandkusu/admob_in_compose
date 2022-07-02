@@ -1,0 +1,17 @@
+apply plugin: 'com.android.library'
+apply from: rootProject.file("gradle/view-common.gradle")
+apply from: rootProject.file("gradle/hilt.gradle")
+
+android {
+    viewBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+    implementation project(':common:model')
+    implementation project(':viewCommon')
+    implementation project(':feature:info:presentation')
+    implementation libs.preference
+    implementation libs.play.services.oss.licenses
+}

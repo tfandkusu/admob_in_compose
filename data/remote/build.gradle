@@ -1,0 +1,16 @@
+plugins {
+    id("com.android.library")
+    id("com.google.devtools.ksp").version("1.6.10-1.0.4")
+}
+apply from: rootProject.file("gradle/common.gradle")
+apply from: rootProject.file("gradle/hilt.gradle")
+
+dependencies {
+    ksp libs.moshi.kotlin.codegen
+    implementation project(':common:model')
+    implementation project(':common:util')
+    implementation libs.retrofit.retrofit
+    implementation libs.retrofit.moshi
+    implementation libs.moshi
+    implementation libs.moshi.adapter
+}
