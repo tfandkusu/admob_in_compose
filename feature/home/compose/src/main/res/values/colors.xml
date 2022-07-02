@@ -12,4 +12,6 @@
     <color name="forkBackground">#666</color>
     <color name="favorite_on">#f44336</color>
     <color name="favorite_off">#9e9e9e</color>
+    <color name="ad_background">#9e9e9e</color>
+    <color name="ad_text">#222</color>
 </resources>
