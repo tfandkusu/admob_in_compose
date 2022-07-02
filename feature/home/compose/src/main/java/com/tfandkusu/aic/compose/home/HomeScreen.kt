@@ -108,7 +108,8 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
             if (isPreview) {
                 DummyAdMobBanner()
             } else {
-                BottomAdMobBannerAndroidView()
+                // BottomAdMobBannerAndroidView()
+                BottomAdMobAnchoredAdaptiveBannerAndroidView()
             }
         }
     }
