@@ -1,22 +1,20 @@
 [![codecov](https://codecov.io/gh/tfandkusu/android_app_template/branch/main/graph/badge.svg?token=DQI5AN5H0Q)](https://codecov.io/gh/tfandkusu/android_app_template)
 
-# Android app template
+# 【WIP】AdMob in Jetpack Compose
 
 # Functionality
 
-This repository is a template for Android app.
-So it does not have any practical features.
+- It displays a list of [tfandkusu](https://github.com/tfandkusu)'s public GitHub repositories.
+- Users can like the repository.
+- It displays AdMob banner ads in the bottom and infeed.
 
-It displays a list of [tfandkusu](https://github.com/tfandkusu)'s public GitHub repositories.
-And users can like the repository.
-
-<img src="https://user-images.githubusercontent.com/16898831/174483728-c03c3a08-5eb8-4f92-b53f-5611d9b2050d.png" width="320">
+**TODO** Screenshot
 
 # Install
 
 Current main branch.
 
-[<img src="https://dply.me/tfafbv/button/large" alt="Try it on your device via DeployGate">](https://dply.me/tfafbv#install)
+**TODO** 
 
 # Architecture
 
@@ -124,9 +122,6 @@ All libraries used are defined in [lib.versions.toml](https://github.com/tfandku
 - [Spotless plugin for Gradle](https://github.com/diffplug/spotless/tree/main/plugin-gradle)
 - [Danger](https://danger.systems/ruby/)
 - [danger-android_lint](https://github.com/loadsmart/danger-android_lint)
-- [Renovate](https://www.whitesourcesoftware.com/free-developer-tools/renovate/)
-- [Firebase App Distribution](https://firebase.google.com/docs/app-distribution)
-- [DeployGate](https://deploygate.com/)
 
 ## Other
 
