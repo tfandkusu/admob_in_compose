@@ -1,4 +1,5 @@
 apply from: rootProject.file("gradle/common.gradle")
+apply plugin: 'kotlin-parcelize'
 
 android {
     buildFeatures {
@@ -25,6 +26,7 @@ dependencies {
     implementation libs.compose.ui.preview
     implementation libs.activity.compose
     implementation libs.compose.livedata
+    implementation libs.kotlin.parcelize.runtime
     debugImplementation libs.compose.ui.tooling
     testImplementation libs.arch.core.testing
     testImplementation libs.kotlin.coroutines.test

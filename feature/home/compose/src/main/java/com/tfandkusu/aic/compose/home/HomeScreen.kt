@@ -2,12 +2,12 @@ package com.tfandkusu.aic.compose.home
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Parcelable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -26,6 +26,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tfandkusu.aic.catalog.GitHubRepoCatalog
 import com.tfandkusu.aic.compose.MyTopAppBar
+import com.tfandkusu.aic.compose.home.listitem.AdListItem
 import com.tfandkusu.aic.compose.home.listitem.GitHubRepoListItem
 import com.tfandkusu.aic.home.compose.R
 import com.tfandkusu.aic.ui.theme.MyAppTheme
@@ -41,6 +42,17 @@ import com.tfandkusu.aic.viewmodel.home.HomeViewModel
 import com.tfandkusu.aic.viewmodel.use
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class HomeListKey(
+    val contentType: Int,
+    val id: Long
+) : Parcelable
+
+private const val CONTENT_TYPE_REPO = 1
+
+private const val CONTENT_TYPE_AD = 2
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
@@ -88,9 +100,20 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                             .fillMaxWidth()
                             .weight(1f)
                     ) {
-                        items(state.items, key = { item -> item.repo.id }) {
-                            GitHubRepoListItem(it) { id, on ->
-                                dispatch(HomeEvent.Favorite(id, on))
+                        state.items.map {
+                            when (it) {
+                                is HomeStateItem.HomeStateAdItem -> {
+                                    item(key = HomeListKey(CONTENT_TYPE_AD, it.id)) {
+                                        AdListItem(isPreview = isPreview)
+                                    }
+                                }
+                                is HomeStateItem.HomeStateRepoItem -> {
+                                    item(key = HomeListKey(CONTENT_TYPE_REPO, it.repo.id)) {
+                                        GitHubRepoListItem(it) { id, on ->
+                                            dispatch(HomeEvent.Favorite(id, on))
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -106,7 +129,7 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                 }
             }
             if (isPreview) {
-                DummyAdMobBanner()
+                DummyBottomAdMobBanner()
             } else {
                 // BottomAdMobBannerAndroidView()
                 BottomAdMobAnchoredAdaptiveBannerAndroidView()
@@ -145,8 +168,15 @@ fun HomeScreenPreviewList() {
     val repos = GitHubRepoCatalog.getList()
     val state = HomeState(
         progress = false,
-        items = repos.map {
-            HomeStateItem(it)
+        items = repos.flatMapIndexed { index, repo ->
+            if (index == 2) {
+                listOf(
+                    HomeStateItem.HomeStateAdItem(index.toLong()),
+                    HomeStateItem.HomeStateRepoItem(repo)
+                )
+            } else {
+                listOf(HomeStateItem.HomeStateRepoItem(repo))
+            }
         }
     )
     MyAppTheme {
@@ -168,8 +198,15 @@ fun HomeScreenPreviewDarkList() {
     val repos = GitHubRepoCatalog.getList()
     val state = HomeState(
         progress = false,
-        items = repos.map {
-            HomeStateItem(it)
+        items = repos.flatMapIndexed { index, repo ->
+            if (index == 2) {
+                listOf(
+                    HomeStateItem.HomeStateAdItem(index.toLong()),
+                    HomeStateItem.HomeStateRepoItem(repo)
+                )
+            } else {
+                listOf(HomeStateItem.HomeStateRepoItem(repo))
+            }
         }
     )
     MyAppTheme {

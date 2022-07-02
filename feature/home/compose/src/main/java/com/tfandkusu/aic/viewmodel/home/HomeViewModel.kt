@@ -16,10 +16,17 @@ sealed class HomeEvent {
 
 sealed class HomeEffect
 
-@Stable
-data class HomeStateItem(
-    val repo: GithubRepo
-)
+sealed class HomeStateItem {
+    @Stable
+    data class HomeStateRepoItem(
+        val repo: GithubRepo
+    ) : HomeStateItem()
+
+    @Stable
+    data class HomeStateAdItem(
+        val id: Long
+    ) : HomeStateItem()
+}
 
 data class HomeState(
     val progress: Boolean = true,

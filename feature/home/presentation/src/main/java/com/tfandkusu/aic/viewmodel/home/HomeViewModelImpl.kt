@@ -63,10 +63,26 @@ class HomeViewModelImpl @Inject constructor(
                         onCreateUseCase.execute().collect { repos ->
                             _state.update {
                                 copy(
-                                    items = repos.map {
-                                        HomeStateItem(
-                                            it
-                                        )
+                                    items = repos.flatMapIndexed { index, repo ->
+                                        if ((index - 2) % 7 == 0) {
+                                            listOf(
+                                                // Infeed Ad
+                                                HomeStateItem.HomeStateAdItem(
+                                                    index.toLong()
+                                                ),
+                                                // Content
+                                                HomeStateItem.HomeStateRepoItem(
+                                                    repo
+                                                )
+                                            )
+                                        } else {
+                                            listOf(
+                                                // Content
+                                                HomeStateItem.HomeStateRepoItem(
+                                                    repo
+                                                )
+                                            )
+                                        }
                                     }
                                 )
                             }

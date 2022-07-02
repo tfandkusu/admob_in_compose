@@ -12,6 +12,7 @@ moshi = '1.13.0'
 # Gradle Plugin
 android-gradle = 'com.android.tools.build:gradle:7.2.1'
 kotlin-gradle = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
+kotlin-parcelize-runtime = { module = 'org.jetbrains.kotlin:kotlin-parcelize-runtime', version.ref = 'kotlin' }
 spotless-gradle = 'com.diffplug.spotless:spotless-plugin-gradle:6.8.0'
 hilt-gradle = { module = 'com.google.dagger:hilt-android-gradle-plugin', version.ref = 'hilt' }
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }

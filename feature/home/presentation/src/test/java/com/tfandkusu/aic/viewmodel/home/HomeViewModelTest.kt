@@ -1,7 +1,6 @@
 package com.tfandkusu.aic.viewmodel.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.tfandkusu.aic.catalog.GitHubRepoCatalog
 import com.tfandkusu.aic.error.NetworkErrorException
 import com.tfandkusu.aic.model.GithubRepo
 import com.tfandkusu.aic.usecase.home.HomeFavoriteUseCase
@@ -65,12 +64,30 @@ class HomeViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun onCreate() = runTest {
-        val repos = GitHubRepoCatalog.getList()
+        val repos = (0 until 10).map {
+            mockk<GithubRepo> {
+                every { id } returns (it + 1).toLong()
+            }
+        }
         every {
             onCreateUseCase.execute()
         } returns flow {
             emit(repos)
         }
+        val items = listOf(
+            HomeStateItem.HomeStateRepoItem(repos[0]),
+            HomeStateItem.HomeStateRepoItem(repos[1]),
+            HomeStateItem.HomeStateAdItem(2),
+            HomeStateItem.HomeStateRepoItem(repos[2]),
+            HomeStateItem.HomeStateRepoItem(repos[3]),
+            HomeStateItem.HomeStateRepoItem(repos[4]),
+            HomeStateItem.HomeStateRepoItem(repos[5]),
+            HomeStateItem.HomeStateRepoItem(repos[6]),
+            HomeStateItem.HomeStateRepoItem(repos[7]),
+            HomeStateItem.HomeStateRepoItem(repos[8]),
+            HomeStateItem.HomeStateAdItem(9),
+            HomeStateItem.HomeStateRepoItem(repos[9])
+        )
         val mockStateObserver = viewModel.state.mockStateObserver()
         viewModel.event(HomeEvent.OnCreate)
         // Use usecase only once.
@@ -79,11 +96,7 @@ class HomeViewModelTest {
             mockStateObserver.onChanged(HomeState())
             onCreateUseCase.execute()
             mockStateObserver.onChanged(
-                HomeState(
-                    items = repos.map {
-                        HomeStateItem(it)
-                    }
-                )
+                HomeState(items = items)
             )
         }
     }
@@ -126,25 +139,21 @@ class HomeViewModelTest {
 
     @Test
     fun favorite() {
-        val repo1 = mockk<GithubRepo> {
-            every { id } returns 1L
+        val repos = (0 until 3).map {
+            mockk<GithubRepo> {
+                every { id } returns (it + 1).toLong()
+            }
         }
-        val repo2 = mockk<GithubRepo> {
-            every { id } returns 2L
-        }
-        val repo3 = mockk<GithubRepo> {
-            every { id } returns 3L
-        }
-        val repos = listOf(repo1, repo2, repo3)
         every {
             onCreateUseCase.execute()
         } returns flow {
             emit(repos)
         }
         val items = listOf(
-            HomeStateItem(repo1),
-            HomeStateItem(repo2),
-            HomeStateItem(repo3)
+            HomeStateItem.HomeStateRepoItem(repos[0]),
+            HomeStateItem.HomeStateRepoItem(repos[1]),
+            HomeStateItem.HomeStateAdItem(2),
+            HomeStateItem.HomeStateRepoItem(repos[2])
         )
         val mockStateObserver = viewModel.state.mockStateObserver()
         viewModel.event(HomeEvent.OnCreate)
