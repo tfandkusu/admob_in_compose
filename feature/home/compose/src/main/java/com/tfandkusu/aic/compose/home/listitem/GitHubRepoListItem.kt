@@ -46,7 +46,7 @@ import java.util.Date
 
 @Composable
 fun GitHubRepoListItem(
-    item: HomeStateItem,
+    item: HomeStateItem.HomeStateRepoItem,
     onClick: (id: Long, on: Boolean) -> Unit = { _, _ -> }
 ) {
     val repo = item.repo
@@ -208,7 +208,7 @@ fun LanguageLabel(language: String) {
 fun GitHubRepoListItemPreviewNormal() {
     MyAppTheme {
         GitHubRepoListItem(
-            HomeStateItem(GitHubRepoCatalog.getList().first())
+            HomeStateItem.HomeStateRepoItem(GitHubRepoCatalog.getList().first())
         )
     }
 }
@@ -218,7 +218,9 @@ fun GitHubRepoListItemPreviewNormal() {
 fun GitHubRepoListItemPreviewFavorite() {
     MyAppTheme {
         GitHubRepoListItem(
-            HomeStateItem(GitHubRepoCatalog.getList().first().copy(favorite = true))
+            HomeStateItem.HomeStateRepoItem(
+                GitHubRepoCatalog.getList().first().copy(favorite = true)
+            )
         )
     }
 }
@@ -228,7 +230,7 @@ fun GitHubRepoListItemPreviewFavorite() {
 fun GitHubRepoListItemPreviewDark() {
     MyAppTheme {
         GitHubRepoListItem(
-            HomeStateItem(GitHubRepoCatalog.getList().first())
+            HomeStateItem.HomeStateRepoItem(GitHubRepoCatalog.getList().first())
         )
     }
 }
@@ -238,7 +240,7 @@ fun GitHubRepoListItemPreviewDark() {
 fun GitHubRepoListItemPreviewLong() {
     MyAppTheme {
         GitHubRepoListItem(
-            HomeStateItem(
+            HomeStateItem.HomeStateRepoItem(
                 GithubRepo(
                     1L,
                     "long_repository_" + (0 until 10).joinToString(separator = "_") {
@@ -264,7 +266,7 @@ fun GitHubRepoListItemPreviewLong() {
 fun GitHubRepoListItemNoDescription() {
     MyAppTheme {
         GitHubRepoListItem(
-            HomeStateItem(
+            HomeStateItem.HomeStateRepoItem(
                 GithubRepo(
                     1L,
                     "no_description",

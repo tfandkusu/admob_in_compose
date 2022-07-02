@@ -2,12 +2,8 @@ package com.tfandkusu.aic.compose.home
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -25,29 +21,21 @@ import com.tfandkusu.aic.ui.theme.MyAppTheme
 
 @Composable
 fun DummyAdMobBanner() {
-    Row(
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(color = colorResource(R.color.ad_background))
-            .padding(top = 1.dp),
-        horizontalArrangement = Arrangement.Center
+            .background(color = colorResource(R.color.white))
+            .width(320.dp)
+            .height(50.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier = Modifier
-                .background(color = colorResource(R.color.white))
-                .width(320.dp)
-                .height(50.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = stringResource(R.string.preview_admob),
-                fontSize = 12.sp,
-                color = colorResource(
-                    R.color.ad_text
-                ),
-                style = TextStyle(fontWeight = FontWeight.SemiBold)
-            )
-        }
+        Text(
+            text = stringResource(R.string.preview_admob),
+            fontSize = 12.sp,
+            color = colorResource(
+                R.color.ad_text
+            ),
+            style = TextStyle(fontWeight = FontWeight.SemiBold)
+        )
     }
 }
 
