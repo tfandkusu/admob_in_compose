@@ -108,12 +108,18 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                         state.items.map {
                             when (it) {
                                 is HomeStateItem.HomeStateAdItem -> {
-                                    item(key = HomeListKey(CONTENT_TYPE_AD, it.id)) {
+                                    item(
+                                        key = HomeListKey(CONTENT_TYPE_AD, it.id),
+                                        contentType = CONTENT_TYPE_AD
+                                    ) {
                                         AdListItem(isPreview = isPreview)
                                     }
                                 }
                                 is HomeStateItem.HomeStateRepoItem -> {
-                                    item(key = HomeListKey(CONTENT_TYPE_REPO, it.repo.id)) {
+                                    item(
+                                        key = HomeListKey(CONTENT_TYPE_REPO, it.repo.id),
+                                        contentType = CONTENT_TYPE_REPO
+                                    ) {
                                         GitHubRepoListItem(it) { id, on ->
                                             dispatch(HomeEvent.Favorite(id, on))
                                         }
