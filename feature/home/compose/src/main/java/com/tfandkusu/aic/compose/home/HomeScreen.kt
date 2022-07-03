@@ -20,6 +20,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,22 +44,17 @@ import com.tfandkusu.aic.viewmodel.home.HomeEvent
 import com.tfandkusu.aic.viewmodel.home.HomeState
 import com.tfandkusu.aic.viewmodel.home.HomeStateItem
 import com.tfandkusu.aic.viewmodel.home.HomeViewModel
+import com.tfandkusu.aic.viewmodel.home.HomeVisiblePosition
 import com.tfandkusu.aic.viewmodel.use
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.parcelize.Parcelize
-import androidx.compose.runtime.getValue
 
 @Parcelize
 data class HomeListKey(
     val contentType: Int,
     val id: Long
 ) : Parcelable
-
-data class HomeVisiblePosition(
-    val firstVisiblePosition: Int,
-    val lastVisiblePosition: Int
-)
 
 private const val CONTENT_TYPE_REPO = 1
 
@@ -85,6 +81,11 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                 )
             }
         }
+    }
+    LaunchedEffect(visiblePosition) {
+        viewModel.event(
+            HomeEvent.OnUpdateVisiblePosition(visiblePosition)
+        )
     }
     Scaffold(
         topBar = {
@@ -135,7 +136,7 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                                         key = HomeListKey(CONTENT_TYPE_AD, it.id),
                                         contentType = CONTENT_TYPE_AD
                                     ) {
-                                        AdListItem(isPreview = isPreview)
+                                        AdListItem(visible = it.visible, isPreview = isPreview)
                                     }
                                 }
                                 is HomeStateItem.HomeStateRepoItem -> {
@@ -205,7 +206,7 @@ fun HomeScreenPreviewList() {
         items = repos.flatMapIndexed { index, repo ->
             if (index == 2) {
                 listOf(
-                    HomeStateItem.HomeStateAdItem(index.toLong()),
+                    HomeStateItem.HomeStateAdItem(index.toLong(), true),
                     HomeStateItem.HomeStateRepoItem(repo)
                 )
             } else {
@@ -235,7 +236,7 @@ fun HomeScreenPreviewDarkList() {
         items = repos.flatMapIndexed { index, repo ->
             if (index == 2) {
                 listOf(
-                    HomeStateItem.HomeStateAdItem(index.toLong()),
+                    HomeStateItem.HomeStateAdItem(index.toLong(), true),
                     HomeStateItem.HomeStateRepoItem(repo)
                 )
             } else {

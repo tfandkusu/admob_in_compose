@@ -15,7 +15,7 @@ import com.tfandkusu.aic.compose.home.DummyAdMobBanner
 import com.tfandkusu.aic.ui.theme.MyAppTheme
 
 @Composable
-fun AdListItem(isPreview: Boolean = false) {
+fun AdListItem(visible: Boolean, isPreview: Boolean = false) {
     Column {
         Box(
             Modifier
@@ -23,10 +23,12 @@ fun AdListItem(isPreview: Boolean = false) {
                 .height(82.dp),
             contentAlignment = Alignment.Center
         ) {
-            if (isPreview) {
-                DummyAdMobBanner()
-            } else {
-                AdMobBannerAndroidView()
+            if (visible) {
+                if (isPreview) {
+                    DummyAdMobBanner()
+                } else {
+                    AdMobBannerAndroidView()
+                }
             }
         }
         Divider()
@@ -37,6 +39,6 @@ fun AdListItem(isPreview: Boolean = false) {
 @Preview
 fun AdListItemPreview() {
     MyAppTheme {
-        AdListItem(isPreview = true)
+        AdListItem(visible = true, isPreview = true)
     }
 }

@@ -11,6 +11,8 @@ import com.tfandkusu.aic.viewmodel.error.ApiErrorViewModelHelper
 import com.tfandkusu.aic.viewmodel.update
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,6 +41,8 @@ class HomeViewModelImpl @Inject constructor(
 
     private var loaded = false
 
+    private val visiblePositionStateFlow = MutableStateFlow(HomeVisiblePosition(0, 0))
+
     override fun event(event: HomeEvent) {
         viewModelScope.launch {
             when (event) {
@@ -60,37 +64,52 @@ class HomeViewModelImpl @Inject constructor(
                 HomeEvent.OnCreate -> {
                     if (!loaded) {
                         loaded = true
-                        onCreateUseCase.execute().collect { repos ->
+                        combine(
+                            onCreateUseCase.execute(),
+                            visiblePositionStateFlow
+                        ) { repos, visiblePosition ->
+                            repos.flatMapIndexed { index, repo ->
+                                if ((index - 2) % 7 == 0) {
+                                    listOf(
+                                        // Infeed Ad
+                                        HomeStateItem.HomeStateAdItem(
+                                            index.toLong(),
+                                            false
+                                        ),
+                                        // Content
+                                        HomeStateItem.HomeStateRepoItem(
+                                            repo
+                                        )
+                                    )
+                                } else {
+                                    listOf(
+                                        // Content
+                                        HomeStateItem.HomeStateRepoItem(
+                                            repo
+                                        )
+                                    )
+                                }
+                            }.mapIndexed { index, item ->
+                                if (item is HomeStateItem.HomeStateAdItem) {
+                                    val visible = visiblePosition.firstIndex <= index &&
+                                        index <= visiblePosition.lastIndex
+                                    item.copy(visible = visible)
+                                } else {
+                                    item
+                                }
+                            }
+                        }.collect { items ->
                             _state.update {
-                                copy(
-                                    items = repos.flatMapIndexed { index, repo ->
-                                        if ((index - 2) % 7 == 0) {
-                                            listOf(
-                                                // Infeed Ad
-                                                HomeStateItem.HomeStateAdItem(
-                                                    index.toLong()
-                                                ),
-                                                // Content
-                                                HomeStateItem.HomeStateRepoItem(
-                                                    repo
-                                                )
-                                            )
-                                        } else {
-                                            listOf(
-                                                // Content
-                                                HomeStateItem.HomeStateRepoItem(
-                                                    repo
-                                                )
-                                            )
-                                        }
-                                    }
-                                )
+                                copy(items = items)
                             }
                         }
                     }
                 }
                 is HomeEvent.Favorite -> {
                     favoriteUseCase.execute(event.id, event.on)
+                }
+                is HomeEvent.OnUpdateVisiblePosition -> {
+                    visiblePositionStateFlow.value = event.visiblePosition
                 }
             }
         }
