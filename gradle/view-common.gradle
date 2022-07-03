@@ -14,6 +14,9 @@ android {
                 "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${rootProject.file(".").absolutePath}/compose-report"
         ]
     }
+    viewBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -21,6 +24,7 @@ dependencies {
     implementation libs.appcompat
     implementation libs.material
     implementation libs.compose.ui.ui
+    implementation libs.compose.ui.viewbinding
     implementation libs.compose.material
     implementation libs.compose.ui.preview
     implementation libs.activity.compose
