@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -18,6 +19,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -44,12 +47,18 @@ import com.tfandkusu.aic.viewmodel.use
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.parcelize.Parcelize
+import androidx.compose.runtime.getValue
 
 @Parcelize
 data class HomeListKey(
     val contentType: Int,
     val id: Long
 ) : Parcelable
+
+data class HomeVisiblePosition(
+    val firstVisiblePosition: Int,
+    val lastVisiblePosition: Int
+)
 
 private const val CONTENT_TYPE_REPO = 1
 
@@ -64,6 +73,19 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
         dispatch(HomeEvent.Load)
     }
     val errorState = useErrorState(viewModel.error)
+    val listState = rememberLazyListState()
+    val visiblePosition by remember {
+        derivedStateOf {
+            if (listState.layoutInfo.visibleItemsInfo.isEmpty()) {
+                HomeVisiblePosition(0, 0)
+            } else {
+                HomeVisiblePosition(
+                    listState.layoutInfo.visibleItemsInfo.first().index,
+                    listState.layoutInfo.visibleItemsInfo.last().index
+                )
+            }
+        }
+    }
     Scaffold(
         topBar = {
             MyTopAppBar(
@@ -101,6 +123,7 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                     }
                 } else {
                     LazyColumn(
+                        state = listState,
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f)
