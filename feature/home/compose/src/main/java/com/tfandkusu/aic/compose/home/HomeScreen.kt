@@ -18,6 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -72,6 +73,14 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
         dispatch(HomeEvent.OnCreate)
         dispatch(HomeEvent.Load)
     }
+    val adViewRecycler = remember {
+        AdViewRecycler()
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            adViewRecycler.clear()
+        }
+    }
     val errorState = useErrorState(viewModel.error)
     val listState = rememberLazyListState()
     val visiblePosition by remember {
@@ -85,6 +94,12 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                 )
             }
         }
+    }
+    LaunchedEffect(visiblePosition) {
+        adViewRecycler.recycle(
+            visiblePosition.firstVisiblePosition,
+            visiblePosition.lastVisiblePosition
+        )
     }
     Scaffold(
         topBar = {
@@ -128,22 +143,26 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                             .fillMaxWidth()
                             .weight(1f)
                     ) {
-                        state.items.map {
-                            when (it) {
+                        state.items.mapIndexed { index, item ->
+                            when (item) {
                                 is HomeStateItem.HomeStateAdItem -> {
                                     item(
-                                        key = HomeListKey(CONTENT_TYPE_AD, it.id),
+                                        key = HomeListKey(CONTENT_TYPE_AD, item.id),
                                         contentType = CONTENT_TYPE_AD
                                     ) {
-                                        AdListItem(isPreview = isPreview)
+                                        AdListItem(
+                                            adViewRecycler = adViewRecycler,
+                                            index = index,
+                                            isPreview = isPreview
+                                        )
                                     }
                                 }
                                 is HomeStateItem.HomeStateRepoItem -> {
                                     item(
-                                        key = HomeListKey(CONTENT_TYPE_REPO, it.repo.id),
+                                        key = HomeListKey(CONTENT_TYPE_REPO, item.repo.id),
                                         contentType = CONTENT_TYPE_REPO
                                     ) {
-                                        GitHubRepoListItem(it) { id, on ->
+                                        GitHubRepoListItem(item) { id, on ->
                                             dispatch(HomeEvent.Favorite(id, on))
                                         }
                                     }
