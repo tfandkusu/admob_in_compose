@@ -6,8 +6,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion libs.versions.compose.get()
-        kotlinCompilerVersion libs.versions.kotlin.get()
+        kotlinCompilerExtensionVersion libs.versions.compose.compiler.get()
     }
     kotlinOptions {
         freeCompilerArgs += [
@@ -28,6 +27,7 @@ dependencies {
     implementation libs.compose.livedata
     implementation libs.kotlin.parcelize.runtime
     debugImplementation libs.compose.ui.tooling
+    debugImplementation libs.customview.poolingcontainer
     testImplementation libs.arch.core.testing
     testImplementation libs.kotlin.coroutines.test
 }
