@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
@@ -82,8 +83,12 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                 }
             )
         }
-    ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
             if (errorState.noError()) {
                 if (state.progress) {
                     Box(
