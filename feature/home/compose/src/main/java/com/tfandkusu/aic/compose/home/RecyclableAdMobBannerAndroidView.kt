@@ -1,5 +1,6 @@
 package com.tfandkusu.aic.compose.home
 
+import android.view.View
 import android.widget.FrameLayout
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -16,8 +17,16 @@ fun RecyclableAdMobBannerAndroidView(adViewRecycler: AdViewRecycler, index: Int)
             .height(50.dp),
         factory = { context ->
             val frameLayout = FrameLayout(context)
-            val adView = adViewRecycler.create(context, index)
+            val adView = adViewRecycler.onFactory(context, index)
             frameLayout.addView(adView)
+            frameLayout.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+                override fun onViewAttachedToWindow(view: View) {
+                }
+
+                override fun onViewDetachedFromWindow(view: View) {
+                    adViewRecycler.onDetached(index)
+                }
+            })
             frameLayout
         }
     )
