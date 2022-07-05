@@ -16,7 +16,7 @@ import com.tfandkusu.aic.compose.home.RecyclableAdMobBannerAndroidView
 import com.tfandkusu.aic.ui.theme.MyAppTheme
 
 @Composable
-fun AdListItem(adViewRecycler: AdViewRecycler, index: Int, isPreview: Boolean = false) {
+fun AdListItem(adViewRecycler: AdViewRecycler, isPreview: Boolean = false) {
     Column {
         Box(
             Modifier
@@ -27,7 +27,7 @@ fun AdListItem(adViewRecycler: AdViewRecycler, index: Int, isPreview: Boolean = 
             if (isPreview) {
                 DummyAdMobBanner()
             } else {
-                RecyclableAdMobBannerAndroidView(adViewRecycler, index)
+                RecyclableAdMobBannerAndroidView(adViewRecycler)
             }
         }
         Divider()
@@ -39,6 +39,6 @@ fun AdListItem(adViewRecycler: AdViewRecycler, index: Int, isPreview: Boolean = 
 fun AdListItemPreview() {
     val adViewRecycler = AdViewRecycler()
     MyAppTheme {
-        AdListItem(adViewRecycler, index = 0, isPreview = true)
+        AdListItem(adViewRecycler, isPreview = true)
     }
 }

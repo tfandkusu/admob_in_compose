@@ -115,7 +115,7 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                             .fillMaxWidth()
                             .weight(1f)
                     ) {
-                        state.items.mapIndexed { index, item ->
+                        state.items.map { item ->
                             when (item) {
                                 is HomeStateItem.HomeStateAdItem -> {
                                     item(
@@ -124,7 +124,6 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                                     ) {
                                         AdListItem(
                                             adViewRecycler = adViewRecycler,
-                                            index = index,
                                             isPreview = isPreview
                                         )
                                     }

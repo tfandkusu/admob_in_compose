@@ -8,23 +8,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.google.android.gms.ads.AdView
 
 @Composable
-fun RecyclableAdMobBannerAndroidView(adViewRecycler: AdViewRecycler, index: Int) {
+fun RecyclableAdMobBannerAndroidView(adViewRecycler: AdViewRecycler) {
     AndroidView(
         modifier = Modifier
             .width(320.dp)
             .height(50.dp),
         factory = { context ->
             val frameLayout = FrameLayout(context)
-            val adView = adViewRecycler.onFactory(context, index)
-            frameLayout.addView(adView)
+            frameLayout.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+                if (frameLayout.childCount == 0) {
+                    frameLayout.post {
+                        val adView = adViewRecycler.onLayoutChange(context)
+                        frameLayout.addView(adView)
+                    }
+                }
+            }
             frameLayout.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
                 override fun onViewAttachedToWindow(view: View) {
                 }
 
                 override fun onViewDetachedFromWindow(view: View) {
-                    adViewRecycler.onDetached(index)
+                    if (frameLayout.childCount >= 1) {
+                        val adView = frameLayout.getChildAt(0) as AdView
+                        adViewRecycler.onDetached(adView)
+                    }
                 }
             })
             frameLayout
