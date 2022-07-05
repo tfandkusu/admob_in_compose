@@ -21,7 +21,7 @@ fun RecyclableAdMobBannerAndroidView(adViewRecycler: AdViewRecycler) {
             frameLayout.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
                 if (frameLayout.childCount == 0) {
                     frameLayout.post {
-                        val adView = adViewRecycler.onLayoutChange(context)
+                        val adView = adViewRecycler.createOrDequeue(context)
                         frameLayout.addView(adView)
                     }
                 }
@@ -33,7 +33,7 @@ fun RecyclableAdMobBannerAndroidView(adViewRecycler: AdViewRecycler) {
                 override fun onViewDetachedFromWindow(view: View) {
                     if (frameLayout.childCount >= 1) {
                         val adView = frameLayout.getChildAt(0) as AdView
-                        adViewRecycler.onDetached(adView)
+                        adViewRecycler.enqueue(adView)
                     }
                 }
             })

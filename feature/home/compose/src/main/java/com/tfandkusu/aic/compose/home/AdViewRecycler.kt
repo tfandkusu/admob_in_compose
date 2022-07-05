@@ -9,12 +9,10 @@ import com.tfandkusu.aic.home.compose.R
 
 class AdViewRecycler {
 
-    private val recyclableAdViewList = mutableListOf<AdView>()
+    private val adViewQueue = mutableListOf<AdView>()
 
-    fun onLayoutChange(context: Context): AdView {
-        return if (recyclableAdViewList.isNotEmpty()) {
-            recyclableAdViewList.removeAt(0)
-        } else {
+    fun createOrDequeue(context: Context): AdView {
+        return if (adViewQueue.isEmpty()) {
             val unitId = context.getString(R.string.ad_mob_banner_unit_id)
             val adView = AdView(context)
             adView.setAdSize(AdSize.BANNER)
@@ -22,15 +20,17 @@ class AdViewRecycler {
             val adRequest = AdRequest.Builder().build()
             adView.loadAd(adRequest)
             adView
+        } else {
+            adViewQueue.removeAt(0)
         }
     }
 
-    fun onDetached(adView: AdView) {
+    fun enqueue(adView: AdView) {
         (adView.parent as ViewGroup).removeView(adView)
-        recyclableAdViewList.add(adView)
+        adViewQueue.add(adView)
     }
 
     fun clear() {
-        recyclableAdViewList.clear()
+        adViewQueue.clear()
     }
 }
