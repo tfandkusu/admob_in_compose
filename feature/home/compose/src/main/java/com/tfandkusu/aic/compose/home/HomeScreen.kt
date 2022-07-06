@@ -17,7 +17,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -62,6 +64,14 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
     LaunchedEffect(Unit) {
         dispatch(HomeEvent.OnCreate)
         dispatch(HomeEvent.Load)
+    }
+    val adViewRecycler = remember {
+        AdViewRecycler()
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            adViewRecycler.clear()
+        }
     }
     val errorState = useErrorState(viewModel.error)
     Scaffold(
@@ -112,7 +122,10 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                                         key = HomeListKey(CONTENT_TYPE_AD, it.id),
                                         contentType = CONTENT_TYPE_AD
                                     ) {
-                                        AdListItem(isPreview = isPreview)
+                                        AdListItem(
+                                            adViewRecycler = adViewRecycler,
+                                            isPreview = isPreview
+                                        )
                                     }
                                 }
                                 is HomeStateItem.HomeStateRepoItem -> {

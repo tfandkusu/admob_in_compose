@@ -10,12 +10,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tfandkusu.aic.compose.home.AdMobBannerAndroidView
+import com.tfandkusu.aic.compose.home.AdViewRecycler
 import com.tfandkusu.aic.compose.home.DummyAdMobBanner
+import com.tfandkusu.aic.compose.home.RecyclableAdMobBannerAndroidView
 import com.tfandkusu.aic.ui.theme.MyAppTheme
 
 @Composable
-fun AdListItem(isPreview: Boolean = false) {
+fun AdListItem(adViewRecycler: AdViewRecycler, isPreview: Boolean = false) {
     Column {
         Box(
             Modifier
@@ -26,7 +27,7 @@ fun AdListItem(isPreview: Boolean = false) {
             if (isPreview) {
                 DummyAdMobBanner()
             } else {
-                AdMobBannerAndroidView()
+                RecyclableAdMobBannerAndroidView(adViewRecycler)
             }
         }
         Divider()
@@ -36,7 +37,8 @@ fun AdListItem(isPreview: Boolean = false) {
 @Composable
 @Preview
 fun AdListItemPreview() {
+    val adViewRecycler = AdViewRecycler()
     MyAppTheme {
-        AdListItem(isPreview = true)
+        AdListItem(adViewRecycler, isPreview = true)
     }
 }
