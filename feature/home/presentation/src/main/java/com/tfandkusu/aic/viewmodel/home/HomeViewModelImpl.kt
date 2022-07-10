@@ -43,7 +43,7 @@ class HomeViewModelImpl @Inject constructor(
     private var loaded = false
 
     private val nativeAdSourcesStateFlow = MutableStateFlow(
-        (0 until NATIVE_AD_COUNT).map {
+        (0 until HOME_NATIVE_AD_COUNT).map {
             HomeStateNativeAdItemSource(adKind = it)
         }
     )
@@ -89,6 +89,7 @@ class HomeViewModelImpl @Inject constructor(
                                             val adCount = nativeAdItemSource.size
                                             listOf(
                                                 // Infeed Ad
+                                                // HomeStateItem.HomeStateBannerAdItem(index.toLong)
                                                 HomeStateItem.HomeStateNativeAdItem(
                                                     index.toLong(),
                                                     nativeAdItemSource[((index - 2) / 7) % adCount]

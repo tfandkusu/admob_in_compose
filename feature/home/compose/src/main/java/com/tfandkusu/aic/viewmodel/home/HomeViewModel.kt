@@ -6,7 +6,7 @@ import com.tfandkusu.aic.model.GithubRepo
 import com.tfandkusu.aic.viewmodel.UnidirectionalViewModel
 import com.tfandkusu.aic.viewmodel.error.ApiErrorViewModelHelper
 
-const val NATIVE_AD_COUNT = 3
+const val HOME_NATIVE_AD_COUNT = 3
 
 sealed class HomeEvent {
 

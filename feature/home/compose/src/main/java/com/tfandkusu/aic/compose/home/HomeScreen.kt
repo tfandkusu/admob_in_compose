@@ -48,7 +48,7 @@ import com.tfandkusu.aic.viewmodel.home.HomeEvent
 import com.tfandkusu.aic.viewmodel.home.HomeState
 import com.tfandkusu.aic.viewmodel.home.HomeStateItem
 import com.tfandkusu.aic.viewmodel.home.HomeViewModel
-import com.tfandkusu.aic.viewmodel.home.NATIVE_AD_COUNT
+import com.tfandkusu.aic.viewmodel.home.HOME_NATIVE_AD_COUNT
 import com.tfandkusu.aic.viewmodel.use
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -88,8 +88,8 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                     .build()
             )
             .build()
-        // ネイティブアドバンス広告を読み込む
-        adLoader.loadAds(AdRequest.Builder().build(), NATIVE_AD_COUNT)
+        // Load AdMob native advanced ads
+        adLoader.loadAds(AdRequest.Builder().build(), HOME_NATIVE_AD_COUNT)
     }
     val adViewRecycler = remember {
         AdViewRecycler()
