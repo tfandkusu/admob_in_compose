@@ -21,8 +21,8 @@ jobs:
       # Make release build and upload to Firebase App Distribution
       - run: ./gradlew assembleRelease appDistributionUploadRelease
         env:
-          TEMPLATE_STORE_PASSWORD: ${{ secrets.AIC_STORE_PASSWORD }}
-          TEMPLATE_KEY_PASSWORD: ${{ secrets.AIC_KEY_PASSWORD }}
+          AIC_STORE_PASSWORD: ${{ secrets.AIC_STORE_PASSWORD }}
+          AIC_KEY_PASSWORD: ${{ secrets.AIC_KEY_PASSWORD }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           RELEASE_NOTE: ${{ github.event.pull_request.title }}
