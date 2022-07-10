@@ -3,6 +3,7 @@ apply from: rootProject.file("gradle/view-common.gradle")
 apply from: rootProject.file("gradle/hilt.gradle")
 
 dependencies {
+    implementation libs.play.services.ads
     implementation project(':common:model')
     implementation project(':viewCommon')
     implementation project(':feature:home:compose')

@@ -5,7 +5,9 @@
     <string name="favorite_on">Favorite on</string>
     <string name="favorite_off">Favorite off</string>
     <string name="preview_admob">This is a 320x50 test ad.</string>
-    <!-- AdMob (For test)-->
+    <!-- AdMob -->
     <string name="ad_mob_banner_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="ad_mob_native_advanced_unit_id">ca-app-pub-3940256099942544/2247696110</string>
+    <string name="label_ad">Ad</string>
+    <string name="ad_image">Ad image</string>
 </resources>
