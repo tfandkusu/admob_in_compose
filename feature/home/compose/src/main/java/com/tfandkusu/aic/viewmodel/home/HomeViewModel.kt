@@ -1,9 +1,12 @@
 package com.tfandkusu.aic.viewmodel.home
 
 import androidx.compose.runtime.Stable
+import com.google.android.gms.ads.nativead.NativeAd
 import com.tfandkusu.aic.model.GithubRepo
 import com.tfandkusu.aic.viewmodel.UnidirectionalViewModel
 import com.tfandkusu.aic.viewmodel.error.ApiErrorViewModelHelper
+
+const val NATIVE_AD_COUNT = 3
 
 sealed class HomeEvent {
 
@@ -12,9 +15,22 @@ sealed class HomeEvent {
     object Load : HomeEvent()
 
     data class Favorite(val id: Long, val on: Boolean) : HomeEvent()
+
+    data class OnLoadNativeAd(val nativeAd: NativeAd?) : HomeEvent()
 }
 
 sealed class HomeEffect
+
+enum class HomeStateNativeAdItemSourceStatus {
+    LOADING,
+    SUCCESS,
+    FAILED
+}
+
+data class HomeStateNativeAdItemSource(
+    val status: HomeStateNativeAdItemSourceStatus = HomeStateNativeAdItemSourceStatus.LOADING,
+    val nativeAd: NativeAd? = null
+)
 
 sealed class HomeStateItem {
     @Stable
@@ -23,8 +39,14 @@ sealed class HomeStateItem {
     ) : HomeStateItem()
 
     @Stable
-    data class HomeStateAdItem(
+    data class HomeStateBannerAdItem(
         val id: Long
+    ) : HomeStateItem()
+
+    @Stable
+    data class HomeStateNativeAdItem(
+        val id: Long,
+        val source: HomeStateNativeAdItemSource
     ) : HomeStateItem()
 }
 

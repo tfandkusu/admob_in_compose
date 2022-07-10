@@ -27,10 +27,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.tfandkusu.aic.catalog.GitHubRepoCatalog
 import com.tfandkusu.aic.compose.MyTopAppBar
 import com.tfandkusu.aic.compose.home.listitem.AdListItem
 import com.tfandkusu.aic.compose.home.listitem.GitHubRepoListItem
+import com.tfandkusu.aic.compose.home.listitem.NativeAdListItem
 import com.tfandkusu.aic.home.compose.R
 import com.tfandkusu.aic.ui.theme.MyAppTheme
 import com.tfandkusu.aic.view.error.ApiError
@@ -42,6 +48,7 @@ import com.tfandkusu.aic.viewmodel.home.HomeEvent
 import com.tfandkusu.aic.viewmodel.home.HomeState
 import com.tfandkusu.aic.viewmodel.home.HomeStateItem
 import com.tfandkusu.aic.viewmodel.home.HomeViewModel
+import com.tfandkusu.aic.viewmodel.home.NATIVE_AD_COUNT
 import com.tfandkusu.aic.viewmodel.use
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -61,9 +68,28 @@ private const val CONTENT_TYPE_AD = 2
 fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
     val context = LocalContext.current
     val (state, _, dispatch) = use(viewModel)
+    val adUnitId = stringResource(R.string.ad_mob_native_advanced_unit_id)
     LaunchedEffect(Unit) {
         dispatch(HomeEvent.OnCreate)
         dispatch(HomeEvent.Load)
+        val adLoader = AdLoader.Builder(context, adUnitId)
+            .forNativeAd { nativeAd ->
+                viewModel.event(HomeEvent.OnLoadNativeAd(nativeAd))
+            }
+            .withAdListener(object : AdListener() {
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    viewModel.event(HomeEvent.OnLoadNativeAd(null))
+                }
+            })
+            .withNativeAdOptions(
+                NativeAdOptions.Builder()
+                    .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_RIGHT)
+                    .setMediaAspectRatio(NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_SQUARE)
+                    .build()
+            )
+            .build()
+        // ネイティブアドバンス広告を読み込む
+        adLoader.loadAds(AdRequest.Builder().build(), NATIVE_AD_COUNT)
     }
     val adViewRecycler = remember {
         AdViewRecycler()
@@ -117,7 +143,7 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                     ) {
                         state.items.map {
                             when (it) {
-                                is HomeStateItem.HomeStateAdItem -> {
+                                is HomeStateItem.HomeStateBannerAdItem -> {
                                     item(
                                         key = HomeListKey(CONTENT_TYPE_AD, it.id),
                                         contentType = CONTENT_TYPE_AD
@@ -126,6 +152,14 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                                             adViewRecycler = adViewRecycler,
                                             isPreview = isPreview
                                         )
+                                    }
+                                }
+                                is HomeStateItem.HomeStateNativeAdItem -> {
+                                    item(
+                                        key = HomeListKey(CONTENT_TYPE_AD, it.id),
+                                        contentType = CONTENT_TYPE_AD
+                                    ) {
+                                        NativeAdListItem(it.source)
                                     }
                                 }
                                 is HomeStateItem.HomeStateRepoItem -> {
@@ -195,7 +229,7 @@ fun HomeScreenPreviewList() {
         items = repos.flatMapIndexed { index, repo ->
             if (index == 2) {
                 listOf(
-                    HomeStateItem.HomeStateAdItem(index.toLong()),
+                    HomeStateItem.HomeStateBannerAdItem(index.toLong()),
                     HomeStateItem.HomeStateRepoItem(repo)
                 )
             } else {
@@ -225,7 +259,7 @@ fun HomeScreenPreviewDarkList() {
         items = repos.flatMapIndexed { index, repo ->
             if (index == 2) {
                 listOf(
-                    HomeStateItem.HomeStateAdItem(index.toLong()),
+                    HomeStateItem.HomeStateBannerAdItem(index.toLong()),
                     HomeStateItem.HomeStateRepoItem(repo)
                 )
             } else {

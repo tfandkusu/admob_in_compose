@@ -1,6 +1,7 @@
 package com.tfandkusu.aic.viewmodel.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.google.android.gms.ads.nativead.NativeAd
 import com.tfandkusu.aic.error.NetworkErrorException
 import com.tfandkusu.aic.model.GithubRepo
 import com.tfandkusu.aic.usecase.home.HomeFavoriteUseCase
@@ -62,8 +63,7 @@ class HomeViewModelTest {
     }
 
     @ExperimentalCoroutinesApi
-    @Test
-    fun onCreate() = runTest {
+    fun onCreateBannerAd() = runTest {
         val repos = (0 until 10).map {
             mockk<GithubRepo> {
                 every { id } returns (it + 1).toLong()
@@ -77,7 +77,7 @@ class HomeViewModelTest {
         val items = listOf(
             HomeStateItem.HomeStateRepoItem(repos[0]),
             HomeStateItem.HomeStateRepoItem(repos[1]),
-            HomeStateItem.HomeStateAdItem(2),
+            HomeStateItem.HomeStateBannerAdItem(2),
             HomeStateItem.HomeStateRepoItem(repos[2]),
             HomeStateItem.HomeStateRepoItem(repos[3]),
             HomeStateItem.HomeStateRepoItem(repos[4]),
@@ -85,7 +85,7 @@ class HomeViewModelTest {
             HomeStateItem.HomeStateRepoItem(repos[6]),
             HomeStateItem.HomeStateRepoItem(repos[7]),
             HomeStateItem.HomeStateRepoItem(repos[8]),
-            HomeStateItem.HomeStateAdItem(9),
+            HomeStateItem.HomeStateBannerAdItem(9),
             HomeStateItem.HomeStateRepoItem(repos[9])
         )
         val mockStateObserver = viewModel.state.mockStateObserver()
@@ -98,6 +98,156 @@ class HomeViewModelTest {
             mockStateObserver.onChanged(
                 HomeState(items = items)
             )
+        }
+    }
+
+    fun favoriteBannerAd() {
+        val repos = (0 until 3).map {
+            mockk<GithubRepo> {
+                every { id } returns (it + 1).toLong()
+            }
+        }
+        every {
+            onCreateUseCase.execute()
+        } returns flow {
+            emit(repos)
+        }
+        val items = listOf(
+            HomeStateItem.HomeStateRepoItem(repos[0]),
+            HomeStateItem.HomeStateRepoItem(repos[1]),
+            HomeStateItem.HomeStateBannerAdItem(2),
+            HomeStateItem.HomeStateRepoItem(repos[2])
+        )
+        val mockStateObserver = viewModel.state.mockStateObserver()
+        viewModel.event(HomeEvent.OnCreate)
+        viewModel.event(HomeEvent.Favorite(2L, true))
+        viewModel.event(HomeEvent.Favorite(2L, false))
+        coVerifySequence {
+            mockStateObserver.onChanged(HomeState())
+            onCreateUseCase.execute()
+            mockStateObserver.onChanged(HomeState(items = items))
+            favoriteUseCase.execute(2L, true)
+            favoriteUseCase.execute(2L, false)
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun onCreateNativeAd() = runTest {
+        // On load native ad
+        val nativeAd = mockk<NativeAd>()
+        val repos = (0 until 10).map {
+            mockk<GithubRepo> {
+                every { id } returns (it + 1).toLong()
+            }
+        }
+        every {
+            onCreateUseCase.execute()
+        } returns flow {
+            emit(repos)
+        }
+        val items1 = listOf(
+            HomeStateItem.HomeStateRepoItem(repos[0]),
+            HomeStateItem.HomeStateRepoItem(repos[1]),
+            HomeStateItem.HomeStateNativeAdItem(2, HomeStateNativeAdItemSource()),
+            HomeStateItem.HomeStateRepoItem(repos[2]),
+            HomeStateItem.HomeStateRepoItem(repos[3]),
+            HomeStateItem.HomeStateRepoItem(repos[4]),
+            HomeStateItem.HomeStateRepoItem(repos[5]),
+            HomeStateItem.HomeStateRepoItem(repos[6]),
+            HomeStateItem.HomeStateRepoItem(repos[7]),
+            HomeStateItem.HomeStateRepoItem(repos[8]),
+            HomeStateItem.HomeStateNativeAdItem(9, HomeStateNativeAdItemSource()),
+            HomeStateItem.HomeStateRepoItem(repos[9])
+        )
+        val items2 = listOf(
+            HomeStateItem.HomeStateRepoItem(repos[0]),
+            HomeStateItem.HomeStateRepoItem(repos[1]),
+            HomeStateItem.HomeStateNativeAdItem(
+                2,
+                HomeStateNativeAdItemSource(HomeStateNativeAdItemSourceStatus.SUCCESS, nativeAd)
+            ),
+            HomeStateItem.HomeStateRepoItem(repos[2]),
+            HomeStateItem.HomeStateRepoItem(repos[3]),
+            HomeStateItem.HomeStateRepoItem(repos[4]),
+            HomeStateItem.HomeStateRepoItem(repos[5]),
+            HomeStateItem.HomeStateRepoItem(repos[6]),
+            HomeStateItem.HomeStateRepoItem(repos[7]),
+            HomeStateItem.HomeStateRepoItem(repos[8]),
+            HomeStateItem.HomeStateNativeAdItem(9, HomeStateNativeAdItemSource()),
+            HomeStateItem.HomeStateRepoItem(repos[9])
+        )
+        val items3 = listOf(
+            HomeStateItem.HomeStateRepoItem(repos[0]),
+            HomeStateItem.HomeStateRepoItem(repos[1]),
+            HomeStateItem.HomeStateNativeAdItem(
+                2,
+                HomeStateNativeAdItemSource(HomeStateNativeAdItemSourceStatus.SUCCESS, nativeAd)
+            ),
+            HomeStateItem.HomeStateRepoItem(repos[2]),
+            HomeStateItem.HomeStateRepoItem(repos[3]),
+            HomeStateItem.HomeStateRepoItem(repos[4]),
+            HomeStateItem.HomeStateRepoItem(repos[5]),
+            HomeStateItem.HomeStateRepoItem(repos[6]),
+            HomeStateItem.HomeStateRepoItem(repos[7]),
+            HomeStateItem.HomeStateRepoItem(repos[8]),
+            HomeStateItem.HomeStateNativeAdItem(
+                9,
+                HomeStateNativeAdItemSource(HomeStateNativeAdItemSourceStatus.FAILED, null)
+            ),
+            HomeStateItem.HomeStateRepoItem(repos[9])
+        )
+        val mockStateObserver = viewModel.state.mockStateObserver()
+        viewModel.event(HomeEvent.OnCreate)
+        // Use usecase only once.
+        viewModel.event(HomeEvent.OnCreate)
+        // On load native ad
+        viewModel.event(HomeEvent.OnLoadNativeAd(nativeAd))
+        // Loading native ad is failed
+        viewModel.event(HomeEvent.OnLoadNativeAd(null))
+        verifySequence {
+            mockStateObserver.onChanged(HomeState())
+            onCreateUseCase.execute()
+            mockStateObserver.onChanged(
+                HomeState(items = items1)
+            )
+            mockStateObserver.onChanged(
+                HomeState(items = items2)
+            )
+            mockStateObserver.onChanged(
+                HomeState(items = items3)
+            )
+        }
+    }
+
+    @Test
+    fun favoriteNativeAd() {
+        val repos = (0 until 3).map {
+            mockk<GithubRepo> {
+                every { id } returns (it + 1).toLong()
+            }
+        }
+        every {
+            onCreateUseCase.execute()
+        } returns flow {
+            emit(repos)
+        }
+        val items = listOf(
+            HomeStateItem.HomeStateRepoItem(repos[0]),
+            HomeStateItem.HomeStateRepoItem(repos[1]),
+            HomeStateItem.HomeStateNativeAdItem(2, HomeStateNativeAdItemSource()),
+            HomeStateItem.HomeStateRepoItem(repos[2])
+        )
+        val mockStateObserver = viewModel.state.mockStateObserver()
+        viewModel.event(HomeEvent.OnCreate)
+        viewModel.event(HomeEvent.Favorite(2L, true))
+        viewModel.event(HomeEvent.Favorite(2L, false))
+        coVerifySequence {
+            mockStateObserver.onChanged(HomeState())
+            onCreateUseCase.execute()
+            mockStateObserver.onChanged(HomeState(items = items))
+            favoriteUseCase.execute(2L, true)
+            favoriteUseCase.execute(2L, false)
         }
     }
 
@@ -134,37 +284,6 @@ class HomeViewModelTest {
             loadUseCase.execute()
             errorMockStateObserver.onChanged(ApiErrorState(network = true))
             stateMockObserver.onChanged(HomeState(progress = false))
-        }
-    }
-
-    @Test
-    fun favorite() {
-        val repos = (0 until 3).map {
-            mockk<GithubRepo> {
-                every { id } returns (it + 1).toLong()
-            }
-        }
-        every {
-            onCreateUseCase.execute()
-        } returns flow {
-            emit(repos)
-        }
-        val items = listOf(
-            HomeStateItem.HomeStateRepoItem(repos[0]),
-            HomeStateItem.HomeStateRepoItem(repos[1]),
-            HomeStateItem.HomeStateAdItem(2),
-            HomeStateItem.HomeStateRepoItem(repos[2])
-        )
-        val mockStateObserver = viewModel.state.mockStateObserver()
-        viewModel.event(HomeEvent.OnCreate)
-        viewModel.event(HomeEvent.Favorite(2L, true))
-        viewModel.event(HomeEvent.Favorite(2L, false))
-        coVerifySequence {
-            mockStateObserver.onChanged(HomeState())
-            onCreateUseCase.execute()
-            mockStateObserver.onChanged(HomeState(items = items))
-            favoriteUseCase.execute(2L, true)
-            favoriteUseCase.execute(2L, false)
         }
     }
 }
