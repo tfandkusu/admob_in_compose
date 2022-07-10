@@ -43,12 +43,12 @@ import com.tfandkusu.aic.view.error.ApiError
 import com.tfandkusu.aic.view.info.InfoActivityAlias
 import com.tfandkusu.aic.viewmodel.error.ApiErrorViewModelHelper
 import com.tfandkusu.aic.viewmodel.error.useErrorState
+import com.tfandkusu.aic.viewmodel.home.HOME_NATIVE_AD_COUNT
 import com.tfandkusu.aic.viewmodel.home.HomeEffect
 import com.tfandkusu.aic.viewmodel.home.HomeEvent
 import com.tfandkusu.aic.viewmodel.home.HomeState
 import com.tfandkusu.aic.viewmodel.home.HomeStateItem
 import com.tfandkusu.aic.viewmodel.home.HomeViewModel
-import com.tfandkusu.aic.viewmodel.home.HOME_NATIVE_AD_COUNT
 import com.tfandkusu.aic.viewmodel.use
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

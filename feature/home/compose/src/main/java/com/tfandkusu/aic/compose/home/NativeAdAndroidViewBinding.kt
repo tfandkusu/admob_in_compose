@@ -18,21 +18,20 @@ fun NativeAdAndroidViewBinding(nativeAd: NativeAd) {
             .fillMaxWidth()
             .height(128.dp),
         factory = { inflater, parent, attachToParent ->
-            ListItemNativeAdBinding.inflate(inflater, parent, attachToParent)
-        },
-        update = {
-            adView.mediaView = this.adMedia
-            adView.headlineView = this.adHeadline
-            adView.bodyView = this.adBody
-            adView.advertiserView = this.adAdvertiser
-            (adView.headlineView as TextView).text = nativeAd.headline
+            val binding = ListItemNativeAdBinding.inflate(inflater, parent, attachToParent)
+            binding.adView.mediaView = binding.adMedia
+            binding.adView.headlineView = binding.adHeadline
+            binding.adView.bodyView = binding.adBody
+            binding.adView.advertiserView = binding.adAdvertiser
+            (binding.adView.headlineView as TextView).text = nativeAd.headline
             nativeAd.mediaContent?.let {
-                adView.mediaView?.setMediaContent(it)
+                binding.adView.mediaView?.setMediaContent(it)
             }
-            adView.mediaView?.setImageScaleType(ImageView.ScaleType.FIT_CENTER)
-            (adView.bodyView as TextView).text = nativeAd.body
-            (adView.advertiserView as TextView).text = nativeAd.advertiser
-            adView.setNativeAd(nativeAd)
+            binding.adView.mediaView?.setImageScaleType(ImageView.ScaleType.FIT_CENTER)
+            (binding.adView.bodyView as TextView).text = nativeAd.body
+            (binding.adView.advertiserView as TextView).text = nativeAd.advertiser
+            binding.adView.setNativeAd(nativeAd)
+            binding
         }
     )
 }
