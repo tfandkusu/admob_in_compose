@@ -40,6 +40,12 @@ data class HomeStateNativeAdItemSource(
             false
         }
     }
+
+    override fun hashCode(): Int {
+        var result = status.hashCode()
+        result = 31 * result + adKind
+        return result
+    }
 }
 
 sealed class HomeStateItem {
