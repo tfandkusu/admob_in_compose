@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import com.google.android.gms.ads.nativead.NativeAd
 import com.tfandkusu.aic.home.compose.databinding.ListItemNativeAdBinding
+import timber.log.Timber
 
 @Composable
 fun NativeAdAndroidViewBinding(nativeAd: NativeAd) {
@@ -18,9 +19,11 @@ fun NativeAdAndroidViewBinding(nativeAd: NativeAd) {
             .fillMaxWidth()
             .height(128.dp),
         factory = { inflater, parent, attachToParent ->
+            Timber.d("Factory")
             ListItemNativeAdBinding.inflate(inflater, parent, attachToParent)
         },
         update = {
+            Timber.d("update")
             adView.mediaView = this.adMedia
             adView.headlineView = this.adHeadline
             adView.bodyView = this.adBody

@@ -44,7 +44,7 @@ class HomeViewModelImpl @Inject constructor(
 
     private val nativeAdSourcesStateFlow = MutableStateFlow(
         (0 until NATIVE_AD_COUNT).map {
-            HomeStateNativeAdItemSource()
+            HomeStateNativeAdItemSource(adKind = it)
         }
     )
 
@@ -125,11 +125,13 @@ class HomeViewModelImpl @Inject constructor(
                             event.nativeAd?.let {
                                 src.copy(
                                     nativeAd = it,
-                                    status = HomeStateNativeAdItemSourceStatus.SUCCESS
+                                    status = HomeStateNativeAdItemSourceStatus.SUCCESS,
+                                    adKind = index
                                 )
                             } ?: run {
                                 src.copy(
-                                    status = HomeStateNativeAdItemSourceStatus.FAILED
+                                    status = HomeStateNativeAdItemSourceStatus.FAILED,
+                                    adKind = index
                                 )
                             }
                         } else {

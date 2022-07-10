@@ -27,10 +27,20 @@ enum class HomeStateNativeAdItemSourceStatus {
     FAILED
 }
 
+@Stable
 data class HomeStateNativeAdItemSource(
     val status: HomeStateNativeAdItemSourceStatus = HomeStateNativeAdItemSourceStatus.LOADING,
+    val adKind: Int = 0,
     val nativeAd: NativeAd? = null
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        return if (other is HomeStateNativeAdItemSource) {
+            status == other.status && adKind == other.adKind
+        } else {
+            false
+        }
+    }
+}
 
 sealed class HomeStateItem {
     @Stable

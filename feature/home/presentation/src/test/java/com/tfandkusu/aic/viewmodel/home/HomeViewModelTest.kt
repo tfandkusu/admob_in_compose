@@ -149,7 +149,7 @@ class HomeViewModelTest {
         val items1 = listOf(
             HomeStateItem.HomeStateRepoItem(repos[0]),
             HomeStateItem.HomeStateRepoItem(repos[1]),
-            HomeStateItem.HomeStateNativeAdItem(2, HomeStateNativeAdItemSource()),
+            HomeStateItem.HomeStateNativeAdItem(2, HomeStateNativeAdItemSource(adKind = 0)),
             HomeStateItem.HomeStateRepoItem(repos[2]),
             HomeStateItem.HomeStateRepoItem(repos[3]),
             HomeStateItem.HomeStateRepoItem(repos[4]),
@@ -157,7 +157,7 @@ class HomeViewModelTest {
             HomeStateItem.HomeStateRepoItem(repos[6]),
             HomeStateItem.HomeStateRepoItem(repos[7]),
             HomeStateItem.HomeStateRepoItem(repos[8]),
-            HomeStateItem.HomeStateNativeAdItem(9, HomeStateNativeAdItemSource()),
+            HomeStateItem.HomeStateNativeAdItem(9, HomeStateNativeAdItemSource(adKind = 1)),
             HomeStateItem.HomeStateRepoItem(repos[9])
         )
         val items2 = listOf(
@@ -165,7 +165,7 @@ class HomeViewModelTest {
             HomeStateItem.HomeStateRepoItem(repos[1]),
             HomeStateItem.HomeStateNativeAdItem(
                 2,
-                HomeStateNativeAdItemSource(HomeStateNativeAdItemSourceStatus.SUCCESS, nativeAd)
+                HomeStateNativeAdItemSource(HomeStateNativeAdItemSourceStatus.SUCCESS, 0, nativeAd)
             ),
             HomeStateItem.HomeStateRepoItem(repos[2]),
             HomeStateItem.HomeStateRepoItem(repos[3]),
@@ -174,7 +174,7 @@ class HomeViewModelTest {
             HomeStateItem.HomeStateRepoItem(repos[6]),
             HomeStateItem.HomeStateRepoItem(repos[7]),
             HomeStateItem.HomeStateRepoItem(repos[8]),
-            HomeStateItem.HomeStateNativeAdItem(9, HomeStateNativeAdItemSource()),
+            HomeStateItem.HomeStateNativeAdItem(9, HomeStateNativeAdItemSource(adKind = 1)),
             HomeStateItem.HomeStateRepoItem(repos[9])
         )
         val items3 = listOf(
@@ -182,7 +182,7 @@ class HomeViewModelTest {
             HomeStateItem.HomeStateRepoItem(repos[1]),
             HomeStateItem.HomeStateNativeAdItem(
                 2,
-                HomeStateNativeAdItemSource(HomeStateNativeAdItemSourceStatus.SUCCESS, nativeAd)
+                HomeStateNativeAdItemSource(HomeStateNativeAdItemSourceStatus.SUCCESS, 0, nativeAd)
             ),
             HomeStateItem.HomeStateRepoItem(repos[2]),
             HomeStateItem.HomeStateRepoItem(repos[3]),
@@ -193,7 +193,7 @@ class HomeViewModelTest {
             HomeStateItem.HomeStateRepoItem(repos[8]),
             HomeStateItem.HomeStateNativeAdItem(
                 9,
-                HomeStateNativeAdItemSource(HomeStateNativeAdItemSourceStatus.FAILED, null)
+                HomeStateNativeAdItemSource(HomeStateNativeAdItemSourceStatus.FAILED, 1, null)
             ),
             HomeStateItem.HomeStateRepoItem(repos[9])
         )
