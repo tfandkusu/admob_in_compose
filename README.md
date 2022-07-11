@@ -1,20 +1,25 @@
 [![codecov](https://codecov.io/gh/tfandkusu/android_app_template/branch/main/graph/badge.svg?token=DQI5AN5H0Q)](https://codecov.io/gh/tfandkusu/android_app_template)
 
-# 【WIP】AdMob in Jetpack Compose
+# AdMob in Jetpack Compose
 
 # Functionality
 
 - It displays a list of [tfandkusu](https://github.com/tfandkusu)'s public GitHub repositories.
 - Users can like the repository.
-- It displays AdMob banner ads in the bottom and infeed.
+- It displays [AdMob anchored adaptive banner ad](https://developers.google.com/admob/android/banner/anchored-adaptive) in the bottom.
+- It displays [AdMob native advanced ad](https://developers.google.com/admob/android/native/advanced) in the list. (Infeed ads)
 
-**TODO** Screenshot
+<img src="https://user-images.githubusercontent.com/16898831/178310015-4416e2fc-74fd-44b8-ac2a-fd4309818ed9.png" width="320">
+
+## Technical feature
+
+This app's LazyColumn has a View recycle mechanism for [AndroidVew](https://developer.android.com/jetpack/compose/interop/interop-apis#views-in-compose) like [RecyclerView](https://developer.android.com/guide/topics/ui/layout/recyclerview).
 
 # Install
 
 Current main branch.
 
-**TODO** 
+[<img src="https://dply.me/qsuy6f/button/large" alt="Try it on your device via DeployGate">](https://dply.me/qsuy6f#install)
 
 # Architecture
 
@@ -74,9 +79,7 @@ It has minimum dependency to speed up compose preview.
 
 ## remoteDataStore
 
-
 - Use Retrofit to access REST API.
-
 
 # Technology used
 
@@ -88,6 +91,7 @@ All libraries used are defined in [lib.versions.toml](https://github.com/tfandku
 
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
 - [Navigation Compose](https://developer.android.com/jetpack/compose/navigation)
+- [Mobile Ads SDK](https://developers.google.com/admob/android/quick-start)
 - [RecomposeHighlighter](https://github.com/android/snippets/blob/master/compose/recomposehighlighter/src/main/java/com/example/android/compose/recomposehighlighter/RecomposeHighlighter.kt)
 
 ## Presentation layer
