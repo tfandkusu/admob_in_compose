@@ -6,8 +6,8 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.tfandkusu.aic.home.compose.R
 
-class AdViewRecycler : ViewRecycler<AdView>() {
-    override fun createView(context: Context): AdView {
+class AdViewRecycler : ViewRecycler<AdView, Unit>() {
+    override fun createView(context: Context, param: Unit): AdView {
         val unitId = context.getString(R.string.ad_mob_banner_unit_id)
         val adView = AdView(context)
         adView.setAdSize(AdSize.BANNER)
