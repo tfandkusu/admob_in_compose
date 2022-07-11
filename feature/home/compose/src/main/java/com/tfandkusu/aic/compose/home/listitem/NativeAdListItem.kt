@@ -9,17 +9,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tfandkusu.aic.compose.home.NativeAdAndroidViewBinding
+import com.tfandkusu.aic.compose.home.NativeAdViewRecycler
+import com.tfandkusu.aic.compose.home.RecyclableNativeAdAndroidView
 import com.tfandkusu.aic.viewmodel.home.HomeStateNativeAdItemSource
 
 @Composable
-fun NativeAdListItem(nativeAdItemSource: HomeStateNativeAdItemSource) {
+fun NativeAdListItem(
+    nativeAdViewRecycler: NativeAdViewRecycler,
+    nativeAdItemSource: HomeStateNativeAdItemSource
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
     ) {
         nativeAdItemSource.nativeAd?.let {
-            NativeAdAndroidViewBinding(it)
+            RecyclableNativeAdAndroidView(
+                nativeAdViewRecycler,
+                it
+            )
         } ?: run {
             Box(
                 modifier = Modifier
@@ -34,5 +41,6 @@ fun NativeAdListItem(nativeAdItemSource: HomeStateNativeAdItemSource) {
 @Composable
 @Preview
 fun NativeAdListItemPreview() {
-    NativeAdListItem(HomeStateNativeAdItemSource())
+    val nativeAdViewRecycler = NativeAdViewRecycler()
+    NativeAdListItem(nativeAdViewRecycler, HomeStateNativeAdItemSource())
 }

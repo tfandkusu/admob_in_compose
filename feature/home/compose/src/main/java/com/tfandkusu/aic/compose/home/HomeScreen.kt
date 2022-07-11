@@ -94,9 +94,17 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
     val adViewRecycler = remember {
         AdViewRecycler()
     }
+    val nativeAdViewRecyclers = remember {
+        (0 until HOME_NATIVE_AD_COUNT).map {
+            NativeAdViewRecycler()
+        }
+    }
     DisposableEffect(Unit) {
         onDispose {
             adViewRecycler.clear()
+            nativeAdViewRecyclers.map {
+                it.clear()
+            }
         }
     }
     val errorState = useErrorState(viewModel.error)
@@ -159,7 +167,10 @@ fun HomeScreen(viewModel: HomeViewModel, isPreview: Boolean = false) {
                                         key = HomeListKey(CONTENT_TYPE_AD, it.id),
                                         contentType = CONTENT_TYPE_AD
                                     ) {
-                                        NativeAdListItem(it.source)
+                                        NativeAdListItem(
+                                            nativeAdViewRecyclers[it.source.adKind],
+                                            it.source
+                                        )
                                     }
                                 }
                                 is HomeStateItem.HomeStateRepoItem -> {
