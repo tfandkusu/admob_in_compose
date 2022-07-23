@@ -9,7 +9,7 @@
 - It displays [AdMob anchored adaptive banner ad](https://developers.google.com/admob/android/banner/anchored-adaptive) in the bottom.
 - It displays [AdMob native advanced ad](https://developers.google.com/admob/android/native/advanced) in the list. (Infeed ads)
 
-<img src="https://user-images.githubusercontent.com/16898831/178310015-4416e2fc-74fd-44b8-ac2a-fd4309818ed9.png" width="320">
+<img src="https://user-images.githubusercontent.com/16898831/180609803-0dfb433d-e70c-45cd-84b2-9bab352341d8.png" width="320">
 
 ## Technical feature
 
