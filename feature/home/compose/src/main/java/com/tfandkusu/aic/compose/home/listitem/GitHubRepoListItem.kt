@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -49,8 +50,8 @@ fun GitHubRepoListItem(
     item: HomeStateItem.HomeStateRepoItem,
     onClick: (id: Long, on: Boolean) -> Unit = { _, _ -> }
 ) {
-    val repo = item.repo
     val context = LocalContext.current
+    val repo = item.repo
     Column(
         modifier = Modifier
             .clickable {
@@ -58,7 +59,6 @@ fun GitHubRepoListItem(
                 context.startActivity(intent)
             }
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -71,7 +71,7 @@ fun GitHubRepoListItem(
                     text = repo.name,
                     modifier = Modifier
                         .weight(1f, false)
-                        .padding(start = 16.dp, end = 12.dp),
+                        .padding(start = 16.dp, end = 12.dp, top = 16.dp, bottom = 16.dp),
                     style = TextStyle(
                         fontSize = 16.sp,
                         color = colorResource(R.color.textHE)
@@ -126,11 +126,11 @@ fun GitHubRepoListItem(
                     tint = tint.value
                 )
             }
+            Spacer(modifier = Modifier.width(4.dp))
         }
 
         // Description
         if (repo.description.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
